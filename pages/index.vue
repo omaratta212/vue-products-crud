@@ -1,3 +1,6 @@
 <template>
-  <div class="container"></div>
+  <div>
+    <LazyHero />
+    <LazyProductGallery />
+  </div>
 </template>
