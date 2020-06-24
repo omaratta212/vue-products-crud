@@ -10,11 +10,6 @@ export default class Form {
   constructor(fields, $axios) {
     this.$axios = $axios
     this.fields = fields
-
-    for (const field of fields) {
-      this[field.name] = field.value
-    }
-
     this.errors = new Errors()
   }
 
@@ -34,9 +29,8 @@ export default class Form {
    */
   reset() {
     for (const field of this.fields) {
-      this[field.name] = ''
+      field.value = ''
     }
-
     this.errors.clear()
   }
 
@@ -84,7 +78,6 @@ export default class Form {
    */
   submit(requestType, url) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line no-undef
       this.$axios[requestType](url, this.data())
         .then((response) => {
           this.onSuccess(response.data)
@@ -92,7 +85,7 @@ export default class Form {
           resolve(response.data)
         })
         .catch((error) => {
-          this.onFail(error.response.data)
+          this.onFail(error.response?.data?.errors)
 
           reject(error.response.data)
         })
@@ -105,8 +98,7 @@ export default class Form {
    * @param {object} data
    */
   onSuccess(data) {
-    alert(data.message) // temporary
-
+    console.table(data) // temporary
     this.reset()
   }
 

@@ -20,6 +20,15 @@
         <h2 class="text-gray-900 text-lg font-medium title-font mb-5">
           Create new account
         </h2>
+
+        <div
+          v-if="form.errors.any()"
+          class="bg-red-100 border-l-4 border-red-500 text-orange-700 p-4 mb-5"
+          role="alert"
+        >
+          <p>There is some errors, please check the fields again.</p>
+        </div>
+
         <div v-for="field in form.fields" :key="field.name">
           <LazyBaseInput
             v-model="field.value"
