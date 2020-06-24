@@ -12,55 +12,24 @@
           have it, but is in it.
         </p>
       </div>
-      <div
+      <form
         class="lg:w-2/6 md:w-1/2 bg-gray-200 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0"
+        @submit.prevent="onSubmit"
+        @keydown="form.errors.clear($event.target.name)"
       >
         <h2 class="text-gray-900 text-lg font-medium title-font mb-5">
           Create new account
         </h2>
-        <label for="username" class="text-base mb-2 sr-only"
-          >Your username</label
-        >
-        <input
-          id="username"
-          class="bg-white rounded border border-gray-400 focus:outline-none focus:border-blue-500 text-base px-4 py-2 mb-4"
-          name="username"
-          autocomplete="username"
-          placeholder="username"
-          type="text"
-        />
-        <label for="email" class="text-base mb-2 sr-only">Your E-mail</label>
-        <input
-          id="email"
-          class="bg-white rounded border border-gray-400 focus:outline-none focus:border-blue-500 text-base px-4 py-2 mb-4"
-          name="email"
-          autocomplete="email"
-          placeholder="Email"
-          type="email"
-        />
-
-        <label for="password" class="text-base mb-2 sr-only"
-          >Create password</label
-        >
-        <input
-          id="password"
-          class="bg-white rounded border border-gray-400 focus:outline-none focus:border-blue-500 text-base px-4 py-2 mb-4"
-          autocomplete="new-password"
-          placeholder="Password"
-          type="password"
-        />
-
-        <label for="password-confirmation" class="text-base mb-2 sr-only"
-          >Confirm password</label
-        >
-        <input
-          id="password-confirmation"
-          class="bg-white rounded border border-gray-400 focus:outline-none focus:border-blue-500 text-base px-4 py-2 mb-4"
-          autocomplete="new-password"
-          placeholder="Confirm password"
-          type="password"
-        />
+        <div v-for="field in form.fields" :key="field.name">
+          <LazyBaseInput
+            v-model="field.value"
+            :label="field.label"
+            :type="field.type"
+            :autocomplete="field.autocomplete"
+          />
+        </div>
         <button
+          type="submit"
           class="text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg"
         >
           Button
@@ -71,7 +40,55 @@
             >Login now</nuxt-link
           >
         </p>
-      </div>
+      </form>
     </div>
   </section>
 </template>
+<script>
+import Form from '~/helpers/Form'
+
+export default {
+  data() {
+    return {
+      form: new Form(
+        [
+          {
+            name: 'name',
+            type: 'text',
+            autocomplete: 'username',
+            label: 'Your username',
+            value: ''
+          },
+          {
+            name: 'email',
+            type: 'email',
+            autocomplete: 'email',
+            label: 'Email address',
+            value: ''
+          },
+          {
+            name: 'password',
+            type: 'password',
+            autocomplete: 'new-password',
+            label: 'Create password',
+            value: ''
+          },
+          {
+            name: 'confirm_password',
+            type: 'password',
+            autocomplete: 'new-password',
+            label: 'Confirm password',
+            value: ''
+          }
+        ],
+        this.$axios
+      )
+    }
+  },
+  methods: {
+    onSubmit() {
+      this.form.post('/register').then((response) => alert('Done!'))
+    }
+  }
+}
+</script>
