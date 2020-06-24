@@ -26,13 +26,14 @@
             :label="field.label"
             :type="field.type"
             :autocomplete="field.autocomplete"
+            :error="form.errors.get(field.name)"
           />
         </div>
         <button
           type="submit"
           class="text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg"
         >
-          Button
+          Create my account
         </button>
         <p class="text-sm text-gray-500 mt-3">
           Do you have an account?
@@ -74,7 +75,7 @@ export default {
             value: ''
           },
           {
-            name: 'confirm_password',
+            name: 'password_confirmation',
             type: 'password',
             autocomplete: 'new-password',
             label: 'Confirm password',

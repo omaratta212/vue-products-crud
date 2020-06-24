@@ -25,6 +25,7 @@
             :label="field.label"
             :type="field.type"
             :autocomplete="field.autocomplete"
+            :error="form.errors.get(field.name)"
           />
         </div>
 
@@ -32,7 +33,7 @@
           type="submit"
           class="text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg"
         >
-          Button
+          Login Now
         </button>
         <p class="text-sm text-gray-500 mt-3">
           Don't have an account?
@@ -53,17 +54,17 @@ export default {
       form: new Form(
         [
           {
-            name: 'name',
+            name: 'email',
             type: 'text',
-            autocomplete: 'username',
-            label: 'Your username',
+            autocomplete: 'email',
+            label: 'Your E-mail',
             value: ''
           },
           {
-            name: 'email',
-            type: 'email',
-            autocomplete: 'email',
-            label: 'Email address',
+            name: 'password',
+            type: 'password',
+            autocomplete: 'new-password',
+            label: 'Create password',
             value: ''
           }
         ],
