@@ -37,7 +37,9 @@ module.exports = {
     // Doc: https://github.com/nuxt-community/stylelint-module
     '@nuxtjs/stylelint-module',
     // Doc: https://github.com/nuxt-community/nuxt-tailwindcss
-    '@nuxtjs/tailwindcss'
+    '@nuxtjs/tailwindcss',
+    // Doc: https://github.com/nuxt/components
+    '@nuxt/components'
   ],
   /*
    ** Nuxt.js modules
@@ -53,7 +55,16 @@ module.exports = {
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {},
+  axios: {
+    baseURL: 'http://127.0.0.1:8000/api'
+  },
+
+  /*
+   ** Nuxt Components
+   * Doc: https://github.com/nuxt/components
+   */
+  components: true,
+
   /*
    ** Build configuration
    */
