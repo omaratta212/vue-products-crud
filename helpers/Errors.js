@@ -1,9 +1,13 @@
+import Vue from 'vue'
+
 export default class Errors {
   /**
    * Create a new Errors instance.
    */
   constructor() {
-    this.errors = {}
+    this.errors = {
+      init: 'initial error' // To prevent form submission on page load
+    }
   }
 
   /**
@@ -41,6 +45,16 @@ export default class Errors {
    */
   record(errors) {
     this.errors = errors
+  }
+
+  /**
+   * Append the new error.
+   * Using Vue.set to insure reactivity
+   * @param {string} field
+   * @param {Object, Array} error
+   */
+  append(field, error) {
+    Vue.set(this.errors, field, [error])
   }
 
   /**

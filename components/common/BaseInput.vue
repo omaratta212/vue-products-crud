@@ -14,9 +14,7 @@
       v-on="$listeners"
       @input="$emit('update', $event.target.value)"
     />
-    <p v-if="error" class="text-red-500 text-sm italic">
-      {{ error }}
-    </p>
+    <p v-if="error" class="text-red-500 text-sm italic" v-text="error"></p>
   </div>
 </template>
 

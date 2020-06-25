@@ -21,24 +21,27 @@
           Create new account
         </h2>
 
-        <div
+        <!--        <div
           v-if="form.errors.any()"
           class="bg-red-100 border-l-4 border-red-500 text-orange-700 p-4 mb-5"
           role="alert"
         >
           <p>There is some errors, please check the fields again.</p>
-        </div>
+        </div>-->
 
         <div v-for="field in form.fields" :key="field.name">
           <LazyBaseInput
             v-model="field.value"
+            :name="field.name"
             :label="field.label"
             :type="field.type"
             :autocomplete="field.autocomplete"
             :error="form.errors.get(field.name)"
+            @blur="form.validate(field)"
           />
         </div>
         <button
+          :disabled="form.errors.any()"
           type="submit"
           class="text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg"
         >
@@ -67,6 +70,12 @@ export default {
             type: 'text',
             autocomplete: 'username',
             label: 'Your username',
+            rules: 'required|alphanumeric|min:3',
+            messages: {
+              required: "I didn't get that, whats's your name?",
+              alphanumeric: 'Username can contain only letters & numbers.',
+              'min:3': 'Too short :('
+            },
             value: ''
           },
           {
@@ -74,6 +83,11 @@ export default {
             type: 'email',
             autocomplete: 'email',
             label: 'Email address',
+            rules: 'required|email',
+            messages: {
+              required: 'We need your email! please.',
+              email: 'No no no, give me a real email!'
+            },
             value: ''
           },
           {
@@ -81,6 +95,11 @@ export default {
             type: 'password',
             autocomplete: 'new-password',
             label: 'Create password',
+            rules: 'required|min:8',
+            messages: {
+              required: 'No password? really?!',
+              'min:8': 'Are you kidding me? create a real password!'
+            },
             value: ''
           },
           {
@@ -88,6 +107,11 @@ export default {
             type: 'password',
             autocomplete: 'new-password',
             label: 'Confirm password',
+            rules: 'required|same:password',
+            messages: {
+              required: 'We need to make sure you remember the password!',
+              'same:password': "Passwords don't match, let's make another one."
+            },
             value: ''
           }
         ],
