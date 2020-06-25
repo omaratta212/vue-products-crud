@@ -10,14 +10,30 @@
           hammock starladder roathse. Craies vegan tousled etsy austin.
         </p>
       </div>
+      <div
+        v-if="form.loading"
+        class="lg:w-2/6 md:w-1/2 bg-gray-200 rounded-lg p-8 flex justify-center md:ml-auto w-full mt-10 md:mt-0"
+      >
+        <LazyLoader class="h-32 w-32" />
+      </div>
+
       <form
+        v-else
         class="lg:w-2/6 md:w-1/2 bg-gray-200 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0"
-        @submit.prevent="onSubmit"
+        @submit.prevent.once="onSubmit"
         @keydown="form.errors.clear($event.target.name)"
       >
         <h2 class="text-gray-900 text-lg font-medium title-font mb-5">
           Login
         </h2>
+
+        <div
+          v-if="error"
+          class="bg-orange-100 border-l-4 border-red-500 text-red-700 p-4 mb-5"
+          role="alert"
+        >
+          <p class="font-bold">{{ error }}</p>
+        </div>
 
         <div v-for="field in form.fields" :key="field.name">
           <LazyBaseInput
@@ -34,8 +50,8 @@
         <button
           type="submit"
           class="text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg"
-          :class="{ 'opacity-50 cursor-not-allowed': form.errors.any() }"
-          :disabled="form.errors.any()"
+          :class="{ 'opacity-50 cursor-not-allowed': !form.isValid() }"
+          :disabled="!form.isValid()"
         >
           Login Now
         </button>
@@ -53,13 +69,15 @@
 import Form from '~/helpers/Form'
 
 export default {
+  // middleware: ['guest'],
   data() {
     return {
+      error: '',
       form: new Form(
         [
           {
             name: 'email',
-            type: 'text',
+            type: 'email',
             autocomplete: 'email',
             label: 'Your E-mail',
             rules: 'required|email',
@@ -87,8 +105,20 @@ export default {
     }
   },
   methods: {
-    onSubmit() {
-      this.form.post('/login').then((response) => alert('Done!'))
+    async onSubmit() {
+      this.form.loading = true
+
+      await this.$auth
+        .loginWith('laravelSanctum', {
+          data: {
+            email: this.form.getField('email').value,
+            password: this.form.getField('password').value
+          }
+        })
+        .catch(() => {
+          this.error = 'Invalid Data, please try again!'
+        })
+      this.form.loading = false
     }
   }
 }

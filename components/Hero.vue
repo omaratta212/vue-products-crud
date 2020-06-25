@@ -17,7 +17,7 @@
           pencil at your bedside, so you can stab them during the night before
           they get away.
         </p>
-        <div class="flex justify-center">
+        <div v-if="!$auth.loggedIn" class="flex justify-center">
           <nuxt-link
             :to="{ name: 'register' }"
             class="inline-flex text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg"

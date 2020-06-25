@@ -19,7 +19,7 @@ module.exports = {
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: '#fff' },
+  loading: { color: '#fff', height: '10px' },
   /*
    ** Global CSS
    */
@@ -28,6 +28,10 @@ module.exports = {
    ** Plugins to load before mounting the App
    */
   plugins: [],
+
+  router: {
+    middleware: ['guest']
+  },
   /*
    ** Nuxt.js dev-modules
    */
@@ -47,6 +51,7 @@ module.exports = {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    '@nuxtjs/auth-next',
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv'
@@ -56,9 +61,27 @@ module.exports = {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    baseURL: 'http://127.0.0.1:8000/api'
+    proxy: true
   },
-
+  proxy: {
+    prefix: 'http://localhost:8000',
+    '/laravel': {
+      target: 'http://localhost:8000',
+      pathRewrite: { '^/laravel': '/' }
+    }
+  },
+  /*
+   ** Auth module configuration
+   ** See https://dev.auth.nuxtjs.org/
+   */
+  auth: {
+    strategies: {
+      laravelSanctum: {
+        provider: 'laravel/sanctum',
+        url: 'http://localhost:8000'
+      }
+    }
+  },
   /*
    ** Nuxt Components
    * Doc: https://github.com/nuxt/components
