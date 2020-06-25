@@ -5,9 +5,7 @@ export default class Errors {
    * Create a new Errors instance.
    */
   constructor() {
-    this.errors = {
-      init: 'initial error' // To prevent form submission on page load
-    }
+    this.errors = {}
   }
 
   /**

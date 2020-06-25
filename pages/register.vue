@@ -21,14 +21,6 @@
           Create new account
         </h2>
 
-        <!--        <div
-          v-if="form.errors.any()"
-          class="bg-red-100 border-l-4 border-red-500 text-orange-700 p-4 mb-5"
-          role="alert"
-        >
-          <p>There is some errors, please check the fields again.</p>
-        </div>-->
-
         <div v-for="field in form.fields" :key="field.name">
           <LazyBaseInput
             v-model="field.value"
@@ -44,6 +36,7 @@
           :disabled="form.errors.any()"
           type="submit"
           class="text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg"
+          :class="{ 'opacity-50 cursor-not-allowed': form.errors.any() }"
         >
           Create my account
         </button>
