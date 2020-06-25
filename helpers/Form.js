@@ -9,6 +9,7 @@ export default class Form {
    * @param {Object} $axios
    */
   constructor(fields, $axios) {
+    this.loading = false
     this.$axios = $axios
     this.fields = fields
     this.errors = new Errors()
@@ -24,6 +25,23 @@ export default class Form {
       data[property.name] = property.value
     }
     return data
+  }
+
+  /**
+   * Get form field.
+   */
+  getField(field) {
+    return this.fields.find(({ name }) => field === name)
+  }
+
+  /**
+   * Check if form is valid.
+   */
+  isValid() {
+    for (const property of this.fields) {
+      if (!property.value) return false
+    }
+    return !this.errors.any()
   }
 
   /**
