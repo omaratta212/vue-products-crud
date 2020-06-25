@@ -12,15 +12,29 @@
           have it, but is in it.
         </p>
       </div>
+
+      <div
+        v-if="form.loading"
+        class="lg:w-2/6 md:w-1/2 bg-gray-200 rounded-lg p-8 flex justify-center md:ml-auto w-full mt-10 md:mt-0"
+      >
+        <LazyLoader class="h-32 w-32" />
+      </div>
       <form
+        v-else
         class="lg:w-2/6 md:w-1/2 bg-gray-200 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0"
-        @submit.prevent="onSubmit"
+        @submit.prevent.once="onSubmit"
         @keydown="form.errors.clear($event.target.name)"
       >
         <h2 class="text-gray-900 text-lg font-medium title-font mb-5">
           Create new account
         </h2>
-
+        <div
+          v-if="error"
+          class="bg-orange-100 border-l-4 border-red-500 text-red-700 p-4 mb-5"
+          role="alert"
+        >
+          <p class="font-bold">{{ error }}</p>
+        </div>
         <div v-for="field in form.fields" :key="field.name">
           <LazyBaseInput
             v-model="field.value"
@@ -33,10 +47,10 @@
           />
         </div>
         <button
-          :disabled="form.errors.any()"
           type="submit"
           class="text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg"
-          :class="{ 'opacity-50 cursor-not-allowed': form.errors.any() }"
+          :class="{ 'opacity-50 cursor-not-allowed': !form.isValid() }"
+          :disabled="!form.isValid()"
         >
           Create my account
         </button>
@@ -54,8 +68,10 @@
 import Form from '~/helpers/Form'
 
 export default {
+  auth: 'guest',
   data() {
     return {
+      error: '',
       form: new Form(
         [
           {
@@ -114,7 +130,14 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.form.post('/register').then((response) => alert('Done!'))
+      this.form.loading = true
+
+      this.form
+        .post('/laravel/register')
+        .then(() => this.$router.push('/login'))
+        .finally(() => {
+          this.form.loading = false
+        })
     }
   }
 }
