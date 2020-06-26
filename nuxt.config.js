@@ -123,5 +123,23 @@ export default {
       productionTip: false,
       devtools: true
     }
+  },
+
+  /*
+   ** Page transition config
+   *  https://nuxtjs.org/api/pages-transition
+   */
+  pageTransition: {
+    mode: 'out-in'
+  },
+
+  /*
+   ** The loading indicator config
+   *  https://nuxtjs.org/api/configuration-loading-indicator/
+   */
+  loadingIndicator: {
+    name: 'circle',
+    color: '#3B8070',
+    background: 'white'
   }
 }

@@ -1,8 +1,11 @@
 <template>
-  <div class="mb-4">
-    <label :for="label.replace(' ', '-')" class="text-base mb-2 sr-only">{{
-      label
-    }}</label>
+  <div class="mb-4 text-left">
+    <label
+      :for="label.replace(' ', '-')"
+      class="text-gray-700 ml-2 font-medium mb-2"
+      :class="{ 'sr-only': !showLabel }"
+      >{{ label }}</label
+    >
     <input
       :id="label.replace(' ', '-')"
       :type="type"
@@ -14,7 +17,11 @@
       v-on="$listeners"
       @input="$emit('update', $event.target.value)"
     />
-    <p v-if="error" class="text-red-500 text-sm italic" v-text="error"></p>
+    <p
+      v-if="error"
+      class="text-red-500 text-sm italic text-left ml-2"
+      v-text="error"
+    ></p>
   </div>
 </template>
 
@@ -27,7 +34,8 @@ const TYPES = [
   'url',
   'tel',
   'search',
-  'color'
+  'color',
+  'hidden'
 ]
 const includes = (types) => (type) => types.includes(type)
 
@@ -49,6 +57,10 @@ export default {
     value: {
       type: [String, Number],
       default: ''
+    },
+    showLabel: {
+      type: Boolean,
+      default: false
     },
     type: {
       type: String,

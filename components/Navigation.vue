@@ -28,7 +28,7 @@
         <a href="#" class="mr-5 hover:text-gray-900">Mechanical pencils</a>
       </nav>
       <div v-if="$auth.loggedIn">
-        <div class="dropdown inline-block relative">
+        <div class="dropdown inline-block relative pt-5 lg:pt-0">
           <button
             class="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg inline-flex items-center"
           >
@@ -49,11 +49,27 @@
             </svg>
           </button>
           <ul
-            class="dropdown-menu absolute hidden text-gray-700 pt-1 right-0	w-full"
+            class="dropdown-menu absolute hidden text-gray-700 pt-1 right-0	w-full bg-gray-300 rounded-lg"
           >
             <li>
+              <nuxt-link
+                :to="{ name: 'index' }"
+                class="hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap rounded-lg"
+                >Home</nuxt-link
+              >
+            </li>
+
+            <li>
+              <nuxt-link
+                :to="{ name: 'admin' }"
+                class="hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap rounded-lg"
+                >Dashboard</nuxt-link
+              >
+            </li>
+
+            <li>
               <a
-                class="bg-gray-200 hover:bg-red-200 py-2 px-4 block whitespace-no-wrap"
+                class="hover:bg-red-200 py-2 px-4 block whitespace-no-wrap rounded-lg"
                 href="#"
                 @click.prevent.once="logout()"
                 >Logout</a

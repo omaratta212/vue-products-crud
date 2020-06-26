@@ -106,7 +106,7 @@
               type="text"
             />
             <button
-              class="lg:mt-2 xl:mt-0 flex-shrink-0 inline-flex text-white border border-white hover:border-indigo-600 hover:text-white py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded-lg font-bold tracking-wide"
+              class="lg:mt-2 xl:mt-0 flex-shrink-0 inline-flex text-white border border-white hover:border-indigo-600 hover:text-white py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded-lg font-bold tracking-wide mt-5 md:mt-0"
             >
               Subscribe
             </button>
