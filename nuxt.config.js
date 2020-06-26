@@ -96,5 +96,18 @@ module.exports = {
      ** You can extend webpack config here
      */
     extend(config, ctx) {}
-  }
+  },
+
+  /*
+   ** API: The vue.config Property
+   *  https://nuxtjs.org/api/configuration-vue-config/
+   */
+  vue: {
+    config: {
+      productionTip: false,
+      devtools: true
+    }
+  },
+
+  watch: ['nuxt.config.js']
 }

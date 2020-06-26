@@ -10,7 +10,7 @@
         <svg
           fill="currentColor"
           viewBox="0 0 20 20"
-          class="w-10 h-10 text-white p-2 bg-blue-500 rounded-full"
+          class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full"
         >
           <path
             d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
@@ -65,7 +65,7 @@
       <div v-else>
         <nuxt-link
           :to="{ name: 'register' }"
-          class="inline-flex items-center text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-base"
+          class="inline-flex items-center text-indigo-600 hover:text-white bg-transparent border border-indigo-500 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded font-bold tracking-wide"
         >
           Create Account
           <svg
