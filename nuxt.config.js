@@ -16,22 +16,21 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
+
   /*
    ** Customize the progress-bar color
+   *  https://nuxtjs.org/api/configuration-loading/
    */
   loading: { color: '#fff', height: '10px' },
-  /*
-   ** Global CSS
-   */
-  css: [],
-  /*
-   ** Plugins to load before mounting the App
-   */
-  plugins: [],
 
+  /*
+   ** Customize vue-router config
+   *  https://nuxtjs.org/api/configuration-router/
+   */
   router: {
-    middleware: ['guest']
+    middleware: ['auth']
   },
+
   /*
    ** Nuxt.js dev-modules
    */
@@ -45,13 +44,16 @@ export default {
     // Doc: https://github.com/nuxt/components
     '@nuxt/components'
   ],
+
   /*
    ** Nuxt.js modules
    */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    // Doc: https://dev.auth.nuxtjs.org/
     '@nuxtjs/auth-next',
+    // Doc: https://pwa.nuxtjs.org/
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv'
@@ -61,27 +63,41 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
+    credentials: true,
+    mode: 'server',
+    prefix: 'http://localhost:8000/api',
     proxy: true
   },
   proxy: {
-    prefix: 'http://localhost:8000',
     '/laravel': {
       target: 'http://localhost:8000',
       pathRewrite: { '^/laravel': '/' }
     }
   },
+
   /*
    ** Auth module configuration
    ** See https://dev.auth.nuxtjs.org/
    */
   auth: {
+    redirect: {
+      login: '/login',
+      logout: '/login',
+      home: '/admin'
+    },
     strategies: {
       laravelSanctum: {
         provider: 'laravel/sanctum',
-        url: 'http://localhost:8000'
+        url: 'http://localhost:8000/api',
+        endpoints: {
+          login: { url: '/auth/login', method: 'post' },
+          logout: { url: '/auth/logout', method: 'post' },
+          user: { url: '/auth/user', method: 'get' }
+        }
       }
     }
   },
+
   /*
    ** Nuxt Components
    * Doc: https://github.com/nuxt/components
