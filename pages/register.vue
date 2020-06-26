@@ -131,12 +131,15 @@ export default {
     }
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
       this.form.loading = true
-
+      await this.$axios.$get('sanctum/csrf-cookie')
       this.form
-        .post('/laravel/register')
+        .post('auth/register')
         .then(() => this.$router.push('/login'))
+        .catch(() => {
+          this.error = 'Invalid Data, please try again!'
+        })
         .finally(() => {
           this.form.loading = false
         })

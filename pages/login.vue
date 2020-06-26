@@ -71,7 +71,7 @@
 import Form from '~/helpers/Form'
 
 export default {
-  // middleware: ['guest'],
+  auth: 'guest',
   data() {
     return {
       error: '',
@@ -107,10 +107,9 @@ export default {
     }
   },
   methods: {
-    async onSubmit() {
+    onSubmit() {
       this.form.loading = true
-
-      await this.$auth
+      this.$auth
         .loginWith('laravelSanctum', {
           data: {
             email: this.form.getField('email').value,
@@ -120,7 +119,9 @@ export default {
         .catch(() => {
           this.error = 'Invalid Data, please try again!'
         })
-      this.form.loading = false
+        .finally(() => {
+          this.form.loading = false
+        })
     }
   }
 }

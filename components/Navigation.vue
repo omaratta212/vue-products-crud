@@ -35,7 +35,7 @@
             <img
               class="w-8 h-8 rounded-full mr-4"
               :src="$auth.user.avatar"
-              alt="Avatar of Jonathan Reinink"
+              :alt="`Hello ${$auth.user.name}`"
             />
             <span class="mr-1">Dropdown</span>
             <svg
