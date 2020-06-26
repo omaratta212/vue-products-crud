@@ -20,13 +20,13 @@
         <div v-if="!$auth.loggedIn" class="flex justify-center">
           <nuxt-link
             :to="{ name: 'register' }"
-            class="inline-flex text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg"
+            class="inline-flex text-white bg-indigo-600 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-700 rounded-lg text-lg font-medium tracking-wide"
           >
             Create account
           </nuxt-link>
           <nuxt-link
             :to="{ name: 'login' }"
-            class="ml-4 inline-flex text-gray-700 bg-gray-200 border-0 py-2 px-6 focus:outline-none hover:bg-gray-300 rounded text-lg"
+            class="ml-4 inline-flex text-gray-700 bg-gray-200 border-0 py-2 px-6 focus:outline-none hover:bg-gray-300 rounded-lg text-lg font-medium tracking-wide"
           >
             Login
           </nuxt-link>

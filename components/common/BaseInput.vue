@@ -9,7 +9,7 @@
       :value="value"
       v-bind="$attrs"
       :placeholder="label"
-      class="bg-white rounded border border-gray-400 focus:outline-none focus:border-blue-500 text-base px-4 py-2 w-full"
+      class="bg-white rounded-lg border border-gray-400 focus:outline-none focus:border-blue-500 text-base px-4 py-2 w-full"
       :class="{ 'border-red-500': error }"
       v-on="$listeners"
       @input="$emit('update', $event.target.value)"

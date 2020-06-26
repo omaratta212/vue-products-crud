@@ -49,15 +49,17 @@
 
         <button
           type="submit"
-          class="text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg"
+          class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded-lg text-lg font-bold tracking-wide"
           :class="{ 'opacity-50 cursor-not-allowed': !form.isValid() }"
           :disabled="!form.isValid()"
         >
           Login Now
         </button>
-        <p class="text-sm text-gray-500 mt-3">
+        <p class="text-sm text-gray-800 mt-3">
           Don't have an account?
-          <nuxt-link :to="{ name: 'register' }" class="text-blue-900"
+          <nuxt-link
+            :to="{ name: 'register' }"
+            class="text-indigo-800 font-bold tracking-wide"
             >Create account
           </nuxt-link>
         </p>
@@ -69,7 +71,7 @@
 import Form from '~/helpers/Form'
 
 export default {
-  // middleware: ['guest'],
+  auth: 'guest',
   data() {
     return {
       error: '',
@@ -105,10 +107,9 @@ export default {
     }
   },
   methods: {
-    async onSubmit() {
+    onSubmit() {
       this.form.loading = true
-
-      await this.$auth
+      this.$auth
         .loginWith('laravelSanctum', {
           data: {
             email: this.form.getField('email').value,
@@ -118,7 +119,9 @@ export default {
         .catch(() => {
           this.error = 'Invalid Data, please try again!'
         })
-      this.form.loading = false
+        .finally(() => {
+          this.form.loading = false
+        })
     }
   }
 }

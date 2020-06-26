@@ -48,15 +48,17 @@
         </div>
         <button
           type="submit"
-          class="text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg"
+          class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded-lg text-lg font-bold tracking-wide"
           :class="{ 'opacity-50 cursor-not-allowed': !form.isValid() }"
           :disabled="!form.isValid()"
         >
           Create my account
         </button>
-        <p class="text-sm text-gray-500 mt-3">
+        <p class="text-sm text-gray-800 mt-3">
           Do you have an account?
-          <nuxt-link class="text-blue-900" :to="{ name: 'login' }"
+          <nuxt-link
+            class="text-indigo-800 font-bold tracking-wide"
+            :to="{ name: 'login' }"
             >Login now</nuxt-link
           >
         </p>
@@ -129,12 +131,15 @@ export default {
     }
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
       this.form.loading = true
-
+      await this.$axios.$get('sanctum/csrf-cookie')
       this.form
-        .post('/laravel/register')
+        .post('auth/register')
         .then(() => this.$router.push('/login'))
+        .catch(() => {
+          this.error = 'Invalid Data, please try again!'
+        })
         .finally(() => {
           this.form.loading = false
         })

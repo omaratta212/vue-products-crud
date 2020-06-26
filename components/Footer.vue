@@ -8,20 +8,28 @@
           >
             CATEGORIES
           </h2>
-          <nav class="list-none mb-10">
+          <ul class="list-none mb-10">
             <li>
-              <a class="text-gray-600 hover:text-white">Graphite pencils</a>
+              <a href="#" class="text-gray-400 text-sm mb-2 hover:text-white"
+                >Graphite pencils</a
+              >
             </li>
             <li>
-              <a class="text-gray-600 hover:text-white">Charcoal pencils</a>
+              <a href="#" class="text-gray-400 text-sm mb-2 hover:text-white"
+                >Charcoal pencils</a
+              >
             </li>
             <li>
-              <a class="text-gray-600 hover:text-white">Colored pencils</a>
+              <a href="#" class="text-gray-400 text-sm mb-2 hover:text-white"
+                >Colored pencils</a
+              >
             </li>
             <li>
-              <a class="text-gray-600 hover:text-white">Mechanical pencils</a>
+              <a href="#" class="text-gray-400 text-sm mb-2 hover:text-white"
+                >Mechanical pencils</a
+              >
             </li>
-          </nav>
+          </ul>
         </div>
         <div class="lg:w-1/4 md:w-1/2 w-full px-4">
           <h2
@@ -29,20 +37,28 @@
           >
             CATEGORIES
           </h2>
-          <nav class="list-none mb-10">
+          <ul class="list-none mb-10">
             <li>
-              <a class="text-gray-600 hover:text-white">Graphite pencils</a>
+              <a href="#" class="text-gray-400 text-sm mb-2 hover:text-white"
+                >Graphite pencils</a
+              >
             </li>
             <li>
-              <a class="text-gray-600 hover:text-white">Charcoal pencils</a>
+              <a href="#" class="text-gray-400 text-sm mb-2 hover:text-white"
+                >Charcoal pencils</a
+              >
             </li>
             <li>
-              <a class="text-gray-600 hover:text-white">Colored pencils</a>
+              <a href="#" class="text-gray-400 text-sm mb-2 hover:text-white"
+                >Colored pencils</a
+              >
             </li>
             <li>
-              <a class="text-gray-600 hover:text-white">Mechanical pencils</a>
+              <a href="#" class="text-gray-400 text-sm mb-2 hover:text-white"
+                >Mechanical pencils</a
+              >
             </li>
-          </nav>
+          </ul>
         </div>
         <div class="lg:w-1/4 md:w-1/2 w-full px-4">
           <h2
@@ -50,20 +66,28 @@
           >
             CATEGORIES
           </h2>
-          <nav class="list-none mb-10">
+          <ul class="list-none mb-10">
             <li>
-              <a class="text-gray-600 hover:text-white">Graphite pencils</a>
+              <a href="#" class="text-gray-400 text-sm mb-2 hover:text-white"
+                >Graphite pencils</a
+              >
             </li>
             <li>
-              <a class="text-gray-600 hover:text-white">Charcoal pencils</a>
+              <a href="#" class="text-gray-400 text-sm mb-2 hover:text-white"
+                >Charcoal pencils</a
+              >
             </li>
             <li>
-              <a class="text-gray-600 hover:text-white">Colored pencils</a>
+              <a href="#" class="text-gray-400 text-sm mb-2 hover:text-white"
+                >Colored pencils</a
+              >
             </li>
             <li>
-              <a class="text-gray-600 hover:text-white">Mechanical pencils</a>
+              <a href="#" class="text-gray-400 text-sm mb-2 hover:text-white"
+                >Mechanical pencils</a
+              >
             </li>
-          </nav>
+          </ul>
         </div>
         <div class="lg:w-1/4 md:w-1/2 w-full px-4">
           <h2
@@ -74,18 +98,20 @@
           <div
             class="flex xl:flex-no-wrap md:flex-no-wrap lg:flex-wrap flex-wrap justify-center md:justify-start"
           >
+            <label for="your-email" class="sr-only">Your email</label>
             <input
-              class="w-40 sm:w-auto bg-gray-800 rounded text-white xl:mr-4 lg:mr-0 sm:mr-4 mr-2 border border-gray-700 focus:outline-none focus:border-blue-500 text-base py-2 px-4"
+              id="your-email"
+              class="w-40 sm:w-auto bg-gray-800 rounded-lg text-white xl:mr-4 lg:mr-0 sm:mr-4 mr-2 border border-gray-700 focus:outline-none focus:border-indigo-500 text-base py-2 px-4"
               placeholder="Your E-mail"
               type="text"
             />
             <button
-              class="lg:mt-2 xl:mt-0 flex-shrink-0 inline-flex text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded"
+              class="lg:mt-2 xl:mt-0 flex-shrink-0 inline-flex text-white border border-white hover:border-indigo-600 hover:text-white py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded-lg font-bold tracking-wide"
             >
               Subscribe
             </button>
           </div>
-          <p class="text-gray-600 text-sm mt-2 md:text-left text-center">
+          <p class="text-gray-400 text-sm mt-2 md:text-left text-center">
             We promise, won't spam you'r inbox!
           </p>
         </div>
@@ -102,7 +128,7 @@
           <svg
             fill="currentColor"
             viewBox="0 0 20 20"
-            class="w-10 h-10 text-white p-2 bg-blue-500 rounded-full"
+            class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full"
           >
             <path
               d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
@@ -111,7 +137,7 @@
 
           <span class="ml-3 text-xl">Pencils</span>
         </nuxt-link>
-        <p class="text-sm text-gray-600 sm:ml-6 sm:mt-0 mt-4">
+        <p class="text-sm text-gray-400 sm:ml-6 sm:mt-0 mt-4">
           © 2020
         </p>
         <span
