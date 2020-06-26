@@ -48,7 +48,7 @@
         </div>
         <button
           type="submit"
-          class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg font-bold tracking-wide"
+          class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded-lg text-lg font-bold tracking-wide"
           :class="{ 'opacity-50 cursor-not-allowed': !form.isValid() }"
           :disabled="!form.isValid()"
         >

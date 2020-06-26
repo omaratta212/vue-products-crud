@@ -101,12 +101,12 @@
             <label for="your-email" class="sr-only">Your email</label>
             <input
               id="your-email"
-              class="w-40 sm:w-auto bg-gray-800 rounded text-white xl:mr-4 lg:mr-0 sm:mr-4 mr-2 border border-gray-700 focus:outline-none focus:border-indigo-500 text-base py-2 px-4"
+              class="w-40 sm:w-auto bg-gray-800 rounded-lg text-white xl:mr-4 lg:mr-0 sm:mr-4 mr-2 border border-gray-700 focus:outline-none focus:border-indigo-500 text-base py-2 px-4"
               placeholder="Your E-mail"
               type="text"
             />
             <button
-              class="lg:mt-2 xl:mt-0 flex-shrink-0 inline-flex text-white border border-white hover:border-indigo-600 hover:text-white py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded font-bold tracking-wide"
+              class="lg:mt-2 xl:mt-0 flex-shrink-0 inline-flex text-white border border-white hover:border-indigo-600 hover:text-white py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded-lg font-bold tracking-wide"
             >
               Subscribe
             </button>

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   mode: 'universal',
   /*
    ** Headers of the page
@@ -107,7 +107,5 @@ module.exports = {
       productionTip: false,
       devtools: true
     }
-  },
-
-  watch: ['nuxt.config.js']
+  }
 }

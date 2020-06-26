@@ -30,7 +30,7 @@
       <div v-if="$auth.loggedIn">
         <div class="dropdown inline-block relative">
           <button
-            class="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded inline-flex items-center"
+            class="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg inline-flex items-center"
           >
             <img
               class="w-8 h-8 rounded-full mr-4"
@@ -65,7 +65,7 @@
       <div v-else>
         <nuxt-link
           :to="{ name: 'register' }"
-          class="inline-flex items-center text-indigo-600 hover:text-white bg-transparent border border-indigo-500 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded font-bold tracking-wide"
+          class="inline-flex items-center text-indigo-600 hover:text-white bg-transparent border border-indigo-500 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded-lg font-bold tracking-wide"
         >
           Create Account
           <svg
