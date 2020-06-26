@@ -40,8 +40,18 @@
     >
       <div class="h-full">
         <div class="flex justify-around">
-          <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-          <a href="#" class="text-red-600 hover:text-indigo-900">Delete</a>
+          <button
+            class="text-indigo-600 hover:text-indigo-900"
+            @click="$emit('edit', product)"
+          >
+            Edit
+          </button>
+          <button
+            class="text-red-600 hover:text-indigo-900"
+            @click="$emit('delete', product)"
+          >
+            Delete
+          </button>
         </div>
       </div>
     </td>

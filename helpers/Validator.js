@@ -63,7 +63,7 @@ export default class Validator {
    */
   numeric(string) {
     const re = /^\d+$/
-    const extractedString = re.exec(string)
+    const extractedString = re.exec(Number(string))
     return !!extractedString
   }
 

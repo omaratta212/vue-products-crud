@@ -147,6 +147,8 @@ export default class Form {
         return this.validator.email(field.value)
       case 'alphanumeric':
         return this.validator.alphanumeric(field.value)
+      case 'numeric':
+        return this.validator.numeric(field.value)
       /**
        * If the string matches the form 'min:<anything>'
        * Will cut the string to get the number then send to validator
@@ -187,5 +189,16 @@ export default class Form {
    */
   onFail(errors) {
     this.errors.record(errors)
+  }
+
+  /**
+   * Fill the form data.
+   *
+   * @param {object} data
+   */
+  fill(data) {
+    for (const field of this.fields) {
+      field.value = data?.[field?.name]
+    }
   }
 }

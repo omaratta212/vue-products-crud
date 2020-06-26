@@ -7,7 +7,12 @@
       <!-- Icon handling can get better :)  -->
       <div class="mt-4">
         <div class="flex flex-wrap -mx-6 text-indigo-900">
-          <LazyChart :chart="{ number: 55, description: 'Orders' }">
+          <LazyChart
+            :chart="{
+              number: products ? products.length : 0,
+              description: 'Products'
+            }"
+          >
             <svg
               width="24"
               height="24"
@@ -45,6 +50,7 @@
         </h1>
         <button
           class="text-md font-medium bg-green-100 py-4 px-5 rounded-lg text-green-500 hover:text-green-700 align-middle flex"
+          @click="productModal"
         >
           <svg
             fill="currentColor"
@@ -63,7 +69,7 @@
         </button>
       </div>
       <keep-alive>
-        <div v-if="products.length" class="flex flex-col mt-8">
+        <div v-if="products" class="flex flex-col mt-8">
           <div
             class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"
           >
@@ -106,6 +112,8 @@
                     v-for="product in products"
                     :key="product.id"
                     :product="product"
+                    @edit="productModal"
+                    @delete="deleteProduct"
                   />
                 </tbody>
               </table>
@@ -113,53 +121,184 @@
           </div>
         </div>
       </keep-alive>
+
+      <LazyModal
+        ref="modal"
+        :title="modalTitle ? modalTitle : 'Add New Product'"
+      >
+        <form
+          class="w-full text-left cursor-pointer"
+          @keydown="form.errors.clear($event.target.name)"
+        >
+          <div
+            class="border border-dashed border-gray-500  mb-5"
+            @click.once.prevent="$refs.file.click()"
+          >
+            <div class="text-center p-10  top-0 right-0 left-0 m-auto ">
+              <h4>
+                {{
+                  selectedFile ? selectedFile.name : 'Click to upload an image'
+                }}
+              </h4>
+            </div>
+          </div>
+          <input
+            ref="file"
+            type="file"
+            class="hidden"
+            @change="onFileChanged"
+          />
+
+          <div v-for="field in form.fields" :key="field.name" class="w-full">
+            <LazyBaseInput
+              v-model="field.value"
+              :show-label="field.showLabel ? field.showLabel : true"
+              :name="field.name"
+              :label="field.label"
+              :type="field.type"
+              :error="form.errors.get(field.name)"
+              @blur="form.validate(field)"
+            />
+          </div>
+          <button
+            :class="{ 'opacity-50 cursor-not-allowed': !form.isValid() }"
+            :disabled="!form.isValid()"
+            class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded-lg text-lg font-bold tracking-wide"
+            @click.prevent="createOrUpdate(form.data())"
+          >
+            Save changes
+          </button>
+        </form>
+      </LazyModal>
     </div>
   </main>
 </template>
 
 <script>
+import Form from '~/helpers/Form'
+
 export default {
   name: 'Admin',
   middleware: 'auth',
+  async asyncData({ $axios }) {
+    const { data } = await $axios.$get('products')
+    return { products: data }
+  },
   data() {
     return {
-      products: [
-        {
-          id: '1',
-          name: 'some product',
-          image:
-            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80',
-          price: '60',
-          description: 'asdadjhask djs dhjlsh djh jlh'
-        },
-        {
-          id: '2',
-          name: 'some product',
-          image:
-            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80',
-          price: '60',
-          description: 'asdadjhask djs dhjlsh djh jlh'
-        },
-        {
-          id: '3',
-          name: 'some product',
-          image:
-            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80',
-          price: '60',
-          description: 'asdadjhask djs dhjlsh djh jlh'
-        },
-        {
-          id: '4',
-          name: 'some product',
-          image:
-            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80',
-          price: '60',
-          description: 'asdadjhask djs dhjlsh djh jlh'
+      selectedFile: null,
+      modalTitle: '',
+      data: {
+        src:
+          'http://img1.vued.vanthink.cn/vued0a233185b6027244f9d43e653227439a.png'
+      },
+
+      form: new Form(
+        [
+          {
+            name: 'id',
+            type: 'hidden',
+            label: 'Id',
+            showLabel: false,
+            value: ''
+          },
+          {
+            name: 'name',
+            type: 'text',
+            label: 'Product Name',
+            rules: 'required|min:6',
+            messages: {
+              required: 'How come a product without name?!',
+              'min:6': 'No, still not expressive enough!'
+            },
+            value: ''
+          },
+          {
+            name: 'price',
+            type: 'number',
+            label: 'Product Price',
+            rules: 'required|numeric',
+            messages: {
+              required: "So, you'r selling this for free??",
+              numeric: 'It must to be a number you know?'
+            },
+            value: ''
+          },
+          {
+            name: 'details',
+            type: 'text',
+            label: 'Product Details',
+            rules: 'required|min:20',
+            messages: {
+              required: "People have to know what's that !",
+              'min:20': 'Talk more about the product!'
+            },
+            value: ''
+          }
+        ],
+        this.$axios
+      )
+    }
+  },
+  methods: {
+    productModal(product) {
+      if (!product.price) {
+        this.form.reset()
+        this.modalTitle = null
+        this.$refs.modal.open()
+        return
+      }
+      this.form.reset()
+      this.modalTitle = `Edit ${product.name}`
+      this.$refs.modal.open()
+      this.form.fill(product)
+    },
+    onFileChanged(event) {
+      if (!event.target.files[0]) return
+      this.selectedFile = event.target.files[0]
+      const formData = new FormData()
+      formData.append('image', this.selectedFile, this.selectedFile.name)
+    },
+    createOrUpdate(product) {
+      if (this.modalTitle) this.update(product)
+      else this.create(product)
+    },
+    create(product) {
+      this.$axios
+        .$post('products', product)
+        .then(({ data }) => {
+          this.products.push(data)
+          this.$refs.modal.close()
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+    },
+    update(productToUpdate) {
+      this.form
+        .put(`products/${productToUpdate.id}`, productToUpdate)
+        .then(({ data }) => {
+          for (const [index, product] of this.products.entries()) {
+            if (product.id === productToUpdate.id) {
+              this.products.splice(index, 1)
+            }
+          }
+          this.products.push(data)
+          this.$refs.modal.close()
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+    },
+    deleteProduct(productToDelete) {
+      this.$axios.$delete(`products/${productToDelete.id}`).then(() => {
+        for (const [index, product] of this.products.entries()) {
+          if (product.id === productToDelete.id) {
+            this.products.splice(index, 1)
+          }
         }
-      ]
+      })
     }
   }
 }
 </script>
-
-<style scoped></style>

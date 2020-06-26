@@ -49,7 +49,7 @@
             </svg>
           </button>
           <ul
-            class="dropdown-menu absolute hidden text-gray-700 pt-1 right-0	w-full bg-gray-200 rounded-lg"
+            class="dropdown-menu absolute hidden text-gray-700 pt-1 right-0	w-full bg-gray-300 rounded-lg"
           >
             <li>
               <nuxt-link

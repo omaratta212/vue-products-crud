@@ -27,7 +27,7 @@
             </nuxt-link>
             <nuxt-link
               :to="{ name: 'login' }"
-              class="ml-4 inline-flex text-gray-700 bg-gray-200 border-0 py-2 px-6 focus:outline-none hover:bg-gray-300 rounded-lg text-lg font-medium tracking-wide"
+              class="ml-4 inline-flex text-gray-700 bg-transparent border border-indigo-500 py-2 px-6 focus:outline-none hover:bg-gray-300 rounded-lg text-lg font-medium tracking-wide"
             >
               Login
             </nuxt-link>
