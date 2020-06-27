@@ -127,11 +127,11 @@
         :title="modalTitle ? modalTitle : 'Add New Product'"
       >
         <form
-          class="w-full text-left cursor-pointer"
+          class="w-full text-left"
           @keydown="form.errors.clear($event.target.name)"
         >
           <div
-            class="border border-dashed border-gray-500  mb-5"
+            class="border border-dashed border-gray-500 cursor-pointer mb-5"
             @click.once.prevent="$refs.file.click()"
           >
             <div class="text-center p-10  top-0 right-0 left-0 m-auto ">
@@ -175,69 +175,20 @@
 </template>
 
 <script>
+import productForm from '../helpers/forms/productForm'
 import Form from '~/helpers/Form'
-
 export default {
   name: 'Admin',
   middleware: 'auth',
   async asyncData({ $axios }) {
-    const { data } = await $axios.$get('products')
+    const { data } = await $axios.$get(`products`)
     return { products: data }
   },
   data() {
     return {
       selectedFile: null,
       modalTitle: '',
-      data: {
-        src:
-          'http://img1.vued.vanthink.cn/vued0a233185b6027244f9d43e653227439a.png'
-      },
-
-      form: new Form(
-        [
-          {
-            name: 'id',
-            type: 'hidden',
-            label: 'Id',
-            showLabel: false,
-            value: ''
-          },
-          {
-            name: 'name',
-            type: 'text',
-            label: 'Product Name',
-            rules: 'required|min:6',
-            messages: {
-              required: 'How come a product without name?!',
-              'min:6': 'No, still not expressive enough!'
-            },
-            value: ''
-          },
-          {
-            name: 'price',
-            type: 'number',
-            label: 'Product Price',
-            rules: 'required|numeric',
-            messages: {
-              required: "So, you'r selling this for free??",
-              numeric: 'It must to be a number you know?'
-            },
-            value: ''
-          },
-          {
-            name: 'details',
-            type: 'text',
-            label: 'Product Details',
-            rules: 'required|min:20',
-            messages: {
-              required: "People have to know what's that !",
-              'min:20': 'Talk more about the product!'
-            },
-            value: ''
-          }
-        ],
-        this.$axios
-      )
+      form: new Form(productForm, this.$axios)
     }
   },
   methods: {

@@ -65,6 +65,7 @@ export default {
   axios: {
     credentials: true,
     mode: 'server',
+    baseURL: 'http://localhost:8000/api',
     prefix: 'http://localhost:8000/api',
     proxy: true
   },
@@ -139,7 +140,7 @@ export default {
    */
   loadingIndicator: {
     name: 'circle',
-    color: '#3B8070',
+    color: '#667eea',
     background: 'white'
   }
 }
