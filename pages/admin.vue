@@ -147,6 +147,7 @@
             ref="file"
             type="file"
             class="hidden"
+            name="main_image"
             @change="onFileChanged"
           />
 
@@ -270,7 +271,7 @@ export default {
     },
 
     /**
-     * Updates the selected file from.
+     * Updates the selected file from form.
      */
     onFileChanged(event) {
       if (!event.target.files[0]) return

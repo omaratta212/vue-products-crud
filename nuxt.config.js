@@ -67,13 +67,13 @@ export default {
   axios: {
     credentials: true,
     mode: 'server',
-    baseURL: 'http://localhost:8000/api',
-    prefix: 'http://localhost:8000/api',
+    baseURL: `${process.env.API_ROOT}/api`,
+    prefix: `${process.env.API_ROOT}/api`,
     proxy: true
   },
   proxy: {
     '/laravel': {
-      target: 'http://localhost:8000',
+      target: `${process.env.API_ROOT}`,
       pathRewrite: { '^/laravel': '/' }
     }
   },
@@ -91,7 +91,7 @@ export default {
     strategies: {
       laravelSanctum: {
         provider: 'laravel/sanctum',
-        url: 'http://localhost:8000/api',
+        url: `${process.env.API_ROOT}/api`,
         endpoints: {
           login: { url: '/auth/login', method: 'post' },
           logout: { url: '/auth/logout', method: 'post' },
@@ -123,8 +123,8 @@ export default {
    */
   vue: {
     config: {
-      productionTip: false,
-      devtools: true
+      productionTip: true,
+      devtools: false
     }
   },
 
