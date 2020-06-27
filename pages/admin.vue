@@ -50,7 +50,7 @@
         </h1>
         <button
           class="text-md font-medium bg-green-100 py-4 px-5 rounded-lg text-green-500 hover:text-green-700 align-middle flex"
-          @click="productModal"
+          @click="openCreateModal"
         >
           <svg
             fill="currentColor"
@@ -112,7 +112,7 @@
                     v-for="product in products"
                     :key="product.id"
                     :product="product"
-                    @edit="productModal"
+                    @edit="openEditModal"
                     @delete="deleteProduct"
                   />
                 </tbody>
@@ -124,17 +124,18 @@
 
       <LazyModal
         ref="modal"
-        :title="modalTitle ? modalTitle : 'Add New Product'"
+        :title="editingTitle ? editingTitle : 'Create New Product'"
       >
         <form
-          class="w-full text-left cursor-pointer"
+          ref="HTMLForm"
+          class="w-full text-left"
           @keydown="form.errors.clear($event.target.name)"
         >
           <div
-            class="border border-dashed border-gray-500  mb-5"
-            @click.once.prevent="$refs.file.click()"
+            class="border border-dashed border-gray-500 cursor-pointer mb-5"
+            @click.prevent="$refs.file.click()"
           >
-            <div class="text-center p-10  top-0 right-0 left-0 m-auto ">
+            <div class="text-center p-10  top-0 right-0 left-0 m-auto">
               <h4>
                 {{
                   selectedFile ? selectedFile.name : 'Click to upload an image'
@@ -146,13 +147,14 @@
             ref="file"
             type="file"
             class="hidden"
+            name="main_image"
             @change="onFileChanged"
           />
 
           <div v-for="field in form.fields" :key="field.name" class="w-full">
             <LazyBaseInput
               v-model="field.value"
-              :show-label="field.showLabel ? field.showLabel : true"
+              :show-label="field.showLabel || false"
               :name="field.name"
               :label="field.label"
               :type="field.type"
@@ -164,9 +166,9 @@
             :class="{ 'opacity-50 cursor-not-allowed': !form.isValid() }"
             :disabled="!form.isValid()"
             class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded-lg text-lg font-bold tracking-wide"
-            @click.prevent="createOrUpdate(form.data())"
+            @click.prevent="createOrUpdateProduct"
           >
-            Save changes
+            {{ editingTitle ? 'Update Product' : 'Create Product' }}
           </button>
         </form>
       </LazyModal>
@@ -175,129 +177,105 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import productForm from '~/helpers/forms/productForm'
 import Form from '~/helpers/Form'
 
 export default {
   name: 'Admin',
   middleware: 'auth',
-  async asyncData({ $axios }) {
-    const { data } = await $axios.$get('products')
-    return { products: data }
+  async asyncData({ store }) {
+    await store.dispatch('product/fetchProducts')
   },
   data() {
     return {
       selectedFile: null,
-      modalTitle: '',
-      data: {
-        src:
-          'http://img1.vued.vanthink.cn/vued0a233185b6027244f9d43e653227439a.png'
-      },
-
-      form: new Form(
-        [
-          {
-            name: 'id',
-            type: 'hidden',
-            label: 'Id',
-            showLabel: false,
-            value: ''
-          },
-          {
-            name: 'name',
-            type: 'text',
-            label: 'Product Name',
-            rules: 'required|min:6',
-            messages: {
-              required: 'How come a product without name?!',
-              'min:6': 'No, still not expressive enough!'
-            },
-            value: ''
-          },
-          {
-            name: 'price',
-            type: 'number',
-            label: 'Product Price',
-            rules: 'required|numeric',
-            messages: {
-              required: "So, you'r selling this for free??",
-              numeric: 'It must to be a number you know?'
-            },
-            value: ''
-          },
-          {
-            name: 'details',
-            type: 'text',
-            label: 'Product Details',
-            rules: 'required|min:20',
-            messages: {
-              required: "People have to know what's that !",
-              'min:20': 'Talk more about the product!'
-            },
-            value: ''
-          }
-        ],
-        this.$axios
-      )
+      editingTitle: '',
+      form: new Form(productForm, this.$axios)
     }
   },
+  computed: {
+    /**
+     * Maps the products from the store.
+     * This way we keep all of the mutations in the vuex module & get the latest data.
+     */
+    ...mapGetters({
+      products: 'product/products'
+    })
+  },
+
   methods: {
-    productModal(product) {
-      if (!product.price) {
-        this.form.reset()
-        this.modalTitle = null
-        this.$refs.modal.open()
-        return
-      }
+    /**
+     * Fired when user clicks on edit button.
+     * Resets the form data then fill the new product data & open dialog.
+     * @param {object} product
+     */
+    openEditModal(product) {
       this.form.reset()
-      this.modalTitle = `Edit ${product.name}`
+      this.clearFile()
+      this.editingTitle = `Update ${product.name}`
       this.$refs.modal.open()
       this.form.fill(product)
     },
+    /**
+     * Fired when user clicks on Add new product button.
+     * Resets the form data, set create mode & open dialog.
+     */
+    openCreateModal() {
+      this.form.reset()
+      this.clearFile()
+      this.editingTitle = null
+      this.$refs.modal.open()
+    },
+
+    /**
+     * Fired when user clicks on the dialog button.
+     * Checks if the user is editing or creating then maps to the appropriate function.
+     */
+    createOrUpdateProduct() {
+      if (this.editingTitle) this.update()
+      else this.create()
+      this.$refs.modal.close()
+    },
+
+    /**
+     * Creates a product by dispatching vuex action.
+     */
+    create() {
+      const formData = new FormData(this.$refs.HTMLForm)
+      this.$store.dispatch('product/createProduct', formData)
+    },
+
+    /**
+     * Updates a product by dispatching vuex action.
+     */
+    update() {
+      const formData = new FormData(this.$refs.HTMLForm)
+      this.$store.dispatch('product/updateProduct', formData)
+    },
+
+    /**
+     * Deletes a product by dispatching vuex action.
+     */
+    deleteProduct(product) {
+      if (!confirm(`Are you sure you want to delete ${product.name}?`)) return
+      this.$store.dispatch('product/deleteProduct', product.id)
+    },
+
+    /**
+     * Clears the file input.
+     */
+    clearFile() {
+      this.$refs.file.value = null
+      this.selectedFile = null
+    },
+
+    /**
+     * Updates the selected file from form.
+     */
     onFileChanged(event) {
       if (!event.target.files[0]) return
       this.selectedFile = event.target.files[0]
-      const formData = new FormData()
-      formData.append('image', this.selectedFile, this.selectedFile.name)
-    },
-    createOrUpdate(product) {
-      if (this.modalTitle) this.update(product)
-      else this.create(product)
-    },
-    create(product) {
-      this.$axios
-        .$post('products', product)
-        .then(({ data }) => {
-          this.products.push(data)
-          this.$refs.modal.close()
-        })
-        .catch((err) => {
-          console.error(err)
-        })
-    },
-    update(productToUpdate) {
-      this.form
-        .put(`products/${productToUpdate.id}`, productToUpdate)
-        .then(({ data }) => {
-          for (const [index, product] of this.products.entries()) {
-            if (product.id === productToUpdate.id) {
-              this.products.splice(index, 1)
-            }
-          }
-          this.products.push(data)
-          this.$refs.modal.close()
-        })
-        .catch((err) => {
-          console.error(err)
-        })
-    },
-    deleteProduct(productToDelete) {
-      this.$axios.$delete(`products/${productToDelete.id}`).then(() => {
-        for (const [index, product] of this.products.entries()) {
-          if (product.id === productToDelete.id) {
-            this.products.splice(index, 1)
-          }
-        }
-      })
     }
   }
 }

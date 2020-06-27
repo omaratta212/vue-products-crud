@@ -10,8 +10,8 @@
         <div class="flex-shrink-0 h-24 w-24">
           <img
             class="rounded-full h-24 w-24 object-cover"
-            :src="product.image"
-            alt="product.name"
+            :src="product.main_image"
+            :alt="product.name"
           />
         </div>
 

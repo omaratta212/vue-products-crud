@@ -56,7 +56,9 @@ export default {
     // Doc: https://pwa.nuxtjs.org/
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt-community/dotenv-module
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    // Doc: https://github.com/nuxt-community/nuxt-logrocket
+    'nuxt-logrocket'
   ],
   /*
    ** Axios module configuration
@@ -65,12 +67,13 @@ export default {
   axios: {
     credentials: true,
     mode: 'server',
-    prefix: 'http://localhost:8000/api',
+    baseURL: `${process.env.API_ROOT}/api`,
+    prefix: `${process.env.API_ROOT}/api`,
     proxy: true
   },
   proxy: {
     '/laravel': {
-      target: 'http://localhost:8000',
+      target: `${process.env.API_ROOT}`,
       pathRewrite: { '^/laravel': '/' }
     }
   },
@@ -88,7 +91,7 @@ export default {
     strategies: {
       laravelSanctum: {
         provider: 'laravel/sanctum',
-        url: 'http://localhost:8000/api',
+        url: `${process.env.API_ROOT}/api`,
         endpoints: {
           login: { url: '/auth/login', method: 'post' },
           logout: { url: '/auth/logout', method: 'post' },
@@ -120,8 +123,8 @@ export default {
    */
   vue: {
     config: {
-      productionTip: false,
-      devtools: true
+      productionTip: true,
+      devtools: false
     }
   },
 
@@ -134,12 +137,11 @@ export default {
   },
 
   /*
-   ** The loading indicator config
-   *  https://nuxtjs.org/api/configuration-loading-indicator/
+   ** LogRocket config for error handling
+   *  https://github.com/nuxt-community/nuxt-logrocket
    */
-  loadingIndicator: {
-    name: 'circle',
-    color: '#3B8070',
-    background: 'white'
+  logRocket: {
+    logRocketId: 'oumuvh/pencils',
+    devModeAllowed: false
   }
 }
