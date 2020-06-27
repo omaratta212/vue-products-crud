@@ -50,7 +50,7 @@
         </h1>
         <button
           class="text-md font-medium bg-green-100 py-4 px-5 rounded-lg text-green-500 hover:text-green-700 align-middle flex"
-          @click="productModal"
+          @click="openCreateModal"
         >
           <svg
             fill="currentColor"
@@ -112,7 +112,7 @@
                     v-for="product in products"
                     :key="product.id"
                     :product="product"
-                    @edit="productModal"
+                    @edit="openEditModal"
                     @delete="deleteProduct"
                   />
                 </tbody>
@@ -124,7 +124,7 @@
 
       <LazyModal
         ref="modal"
-        :title="modalTitle ? modalTitle : 'Add New Product'"
+        :title="editingTitle ? editingTitle : 'Create New Product'"
       >
         <form
           class="w-full text-left"
@@ -152,7 +152,7 @@
           <div v-for="field in form.fields" :key="field.name" class="w-full">
             <LazyBaseInput
               v-model="field.value"
-              :show-label="field.showLabel ? field.showLabel : true"
+              :show-label="field.showLabel || false"
               :name="field.name"
               :label="field.label"
               :type="field.type"
@@ -164,9 +164,9 @@
             :class="{ 'opacity-50 cursor-not-allowed': !form.isValid() }"
             :disabled="!form.isValid()"
             class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded-lg text-lg font-bold tracking-wide"
-            @click.prevent="createOrUpdate(form.data())"
+            @click.prevent="createOrUpdateProduct(form.data())"
           >
-            Save changes
+            {{ editingTitle ? 'Update Product' : 'Create Product' }}
           </button>
         </form>
       </LazyModal>
@@ -175,80 +175,91 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import productForm from '../helpers/forms/productForm'
 import Form from '~/helpers/Form'
+
 export default {
   name: 'Admin',
   middleware: 'auth',
-  async asyncData({ $axios }) {
-    const { data } = await $axios.$get(`products`)
-    return { products: data }
+  async asyncData({ store }) {
+    await store.dispatch('product/fetchProducts')
   },
   data() {
     return {
       selectedFile: null,
-      modalTitle: '',
+      editingTitle: '',
       form: new Form(productForm, this.$axios)
     }
   },
+  computed: {
+    /**
+     * Maps the products from the store.
+     * This way we keep all of the mutations in the vuex module & get the latest data.
+     */
+    ...mapGetters({
+      products: 'product/products'
+    })
+  },
+
   methods: {
-    productModal(product) {
-      if (!product.price) {
-        this.form.reset()
-        this.modalTitle = null
-        this.$refs.modal.open()
-        return
-      }
+    /**
+     * Fired when user clicks on edit button.
+     * Resets the form data then fill the new product data & open dialog.
+     * @param {object} product
+     */
+    openEditModal(product) {
       this.form.reset()
-      this.modalTitle = `Edit ${product.name}`
+      this.editingTitle = `Update ${product.name}`
       this.$refs.modal.open()
       this.form.fill(product)
     },
+    /**
+     * Fired when user clicks on Add new product button.
+     * Resets the form data, set create mode & open dialog.
+     */
+    openCreateModal() {
+      this.form.reset()
+      this.editingTitle = null
+      this.$refs.modal.open()
+    },
+
+    /**
+     * Fired when user clicks on the dialog button.
+     * Checks if the user is editing or creating then maps to the appropriate function.
+     */
+    createOrUpdateProduct(product) {
+      if (this.editingTitle) this.update(product)
+      else this.create(product)
+      this.$refs.modal.close()
+    },
+
+    /**
+     * Creates a product by dispatching vuex action.
+     */
+    create(product) {
+      this.$store.dispatch('product/createProduct', product)
+    },
+
+    /**
+     * Updates a product by dispatching vuex action.
+     */
+    update(product) {
+      this.$store.dispatch('product/updateProduct', product)
+    },
+
+    /**
+     * Deletes a product by dispatching vuex action.
+     */
+    deleteProduct(id) {
+      this.$store.dispatch('product/deleteProduct', id)
+    },
+
     onFileChanged(event) {
       if (!event.target.files[0]) return
       this.selectedFile = event.target.files[0]
       const formData = new FormData()
       formData.append('image', this.selectedFile, this.selectedFile.name)
-    },
-    createOrUpdate(product) {
-      if (this.modalTitle) this.update(product)
-      else this.create(product)
-    },
-    create(product) {
-      this.$axios
-        .$post('products', product)
-        .then(({ data }) => {
-          this.products.push(data)
-          this.$refs.modal.close()
-        })
-        .catch((err) => {
-          console.error(err)
-        })
-    },
-    update(productToUpdate) {
-      this.form
-        .put(`products/${productToUpdate.id}`, productToUpdate)
-        .then(({ data }) => {
-          for (const [index, product] of this.products.entries()) {
-            if (product.id === productToUpdate.id) {
-              this.products.splice(index, 1)
-            }
-          }
-          this.products.push(data)
-          this.$refs.modal.close()
-        })
-        .catch((err) => {
-          console.error(err)
-        })
-    },
-    deleteProduct(productToDelete) {
-      this.$axios.$delete(`products/${productToDelete.id}`).then(() => {
-        for (const [index, product] of this.products.entries()) {
-          if (product.id === productToDelete.id) {
-            this.products.splice(index, 1)
-          }
-        }
-      })
     }
   }
 }

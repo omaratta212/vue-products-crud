@@ -142,6 +142,6 @@ export default {
    */
   logRocket: {
     logRocketId: 'oumuvh/pencils',
-    devModeAllowed: true
+    devModeAllowed: false
   }
 }

@@ -39,7 +39,7 @@ export default class Form {
    */
   isValid() {
     for (const property of this.fields) {
-      if (!property.value) return false
+      if (!property.value && property.rules) return false
     }
     return !this.errors.any()
   }
