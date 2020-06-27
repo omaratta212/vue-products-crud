@@ -127,14 +127,15 @@
         :title="editingTitle ? editingTitle : 'Create New Product'"
       >
         <form
+          ref="HTMLForm"
           class="w-full text-left"
           @keydown="form.errors.clear($event.target.name)"
         >
           <div
             class="border border-dashed border-gray-500 cursor-pointer mb-5"
-            @click.once.prevent="$refs.file.click()"
+            @click.prevent="$refs.file.click()"
           >
-            <div class="text-center p-10  top-0 right-0 left-0 m-auto ">
+            <div class="text-center p-10  top-0 right-0 left-0 m-auto">
               <h4>
                 {{
                   selectedFile ? selectedFile.name : 'Click to upload an image'
@@ -164,7 +165,7 @@
             :class="{ 'opacity-50 cursor-not-allowed': !form.isValid() }"
             :disabled="!form.isValid()"
             class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded-lg text-lg font-bold tracking-wide"
-            @click.prevent="createOrUpdateProduct(form.data())"
+            @click.prevent="createOrUpdateProduct"
           >
             {{ editingTitle ? 'Update Product' : 'Create Product' }}
           </button>
@@ -176,7 +177,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import productForm from '../helpers/forms/productForm'
+import productForm from '~/helpers/forms/productForm'
 import Form from '~/helpers/Form'
 
 export default {
@@ -210,6 +211,7 @@ export default {
      */
     openEditModal(product) {
       this.form.reset()
+      this.clearFile()
       this.editingTitle = `Update ${product.name}`
       this.$refs.modal.open()
       this.form.fill(product)
@@ -220,6 +222,7 @@ export default {
      */
     openCreateModal() {
       this.form.reset()
+      this.clearFile()
       this.editingTitle = null
       this.$refs.modal.open()
     },
@@ -228,38 +231,50 @@ export default {
      * Fired when user clicks on the dialog button.
      * Checks if the user is editing or creating then maps to the appropriate function.
      */
-    createOrUpdateProduct(product) {
-      if (this.editingTitle) this.update(product)
-      else this.create(product)
+    createOrUpdateProduct() {
+      if (this.editingTitle) this.update()
+      else this.create()
       this.$refs.modal.close()
     },
 
     /**
      * Creates a product by dispatching vuex action.
      */
-    create(product) {
-      this.$store.dispatch('product/createProduct', product)
+    create() {
+      const formData = new FormData(this.$refs.HTMLForm)
+      this.$store.dispatch('product/createProduct', formData)
     },
 
     /**
      * Updates a product by dispatching vuex action.
      */
-    update(product) {
-      this.$store.dispatch('product/updateProduct', product)
+    update() {
+      const formData = new FormData(this.$refs.HTMLForm)
+      this.$store.dispatch('product/updateProduct', formData)
     },
 
     /**
      * Deletes a product by dispatching vuex action.
      */
-    deleteProduct(id) {
-      this.$store.dispatch('product/deleteProduct', id)
+    deleteProduct(product) {
+      if (!confirm(`Are you sure you want to delete ${product.name}?`)) return
+      this.$store.dispatch('product/deleteProduct', product.id)
     },
 
+    /**
+     * Clears the file input.
+     */
+    clearFile() {
+      this.$refs.file.value = null
+      this.selectedFile = null
+    },
+
+    /**
+     * Updates the selected file from.
+     */
     onFileChanged(event) {
       if (!event.target.files[0]) return
       this.selectedFile = event.target.files[0]
-      const formData = new FormData()
-      formData.append('image', this.selectedFile, this.selectedFile.name)
     }
   }
 }

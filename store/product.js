@@ -1,5 +1,11 @@
 import Vue from 'vue'
 
+const uploadConfig = {
+  headers: {
+    'Content-Type': 'multipart/form-data'
+  }
+}
+
 export const state = () => ({
   products: []
 })
@@ -35,12 +41,17 @@ export const actions = {
     const { data } = await this.$axios.$get('products')
     commit('SET_PRODUCTS', data)
   },
-  async createProduct({ commit, state }, product) {
-    const { data } = await this.$axios.$post('products', product)
+  async createProduct({ commit, state }, formData) {
+    const { data } = await this.$axios.$post('products', formData, uploadConfig)
     commit('ADD_PRODUCT', data)
   },
-  async updateProduct({ commit, state }, product) {
-    const { data } = await this.$axios.$put(`products/${product.id}`, product)
+  async updateProduct({ commit, state }, formData) {
+    formData.append('_method', 'PUT')
+    const { data } = await this.$axios.$post(
+      `products/${formData.get('id')}`,
+      formData,
+      uploadConfig
+    )
     commit('UPDATE_PRODUCT', data)
   },
   async deleteProduct({ commit, state }, id) {

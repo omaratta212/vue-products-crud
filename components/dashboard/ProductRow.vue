@@ -48,7 +48,7 @@
           </button>
           <button
             class="text-red-600 hover:text-indigo-900"
-            @click="$emit('delete', product.id)"
+            @click="$emit('delete', product)"
           >
             Delete
           </button>
