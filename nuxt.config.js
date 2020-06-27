@@ -56,7 +56,9 @@ export default {
     // Doc: https://pwa.nuxtjs.org/
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt-community/dotenv-module
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    // Doc: https://github.com/nuxt-community/nuxt-logrocket
+    'nuxt-logrocket'
   ],
   /*
    ** Axios module configuration
@@ -135,12 +137,11 @@ export default {
   },
 
   /*
-   ** The loading indicator config
-   *  https://nuxtjs.org/api/configuration-loading-indicator/
+   ** LogRocket config for error handling
+   *  https://github.com/nuxt-community/nuxt-logrocket
    */
-  loadingIndicator: {
-    name: 'circle',
-    color: '#667eea',
-    background: 'white'
+  logRocket: {
+    logRocketId: 'oumuvh/pencils',
+    devModeAllowed: true
   }
 }
